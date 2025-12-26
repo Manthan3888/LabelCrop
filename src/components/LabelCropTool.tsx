@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
 import { PDFDocument, rgb } from 'pdf-lib';
 import { Upload, Download, RotateCw, ZoomIn, ZoomOut, Maximize2, X, FileText } from 'lucide-react';
@@ -29,20 +29,20 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const LABEL_SIZE_MM = {
+    const LABEL_SIZE_MM = useMemo(() => ({
         flipkart: { width: 100, height: 148 },
         meesho: { width: 100, height: 150 },
         amazon: { width: 102, height: 152 },
         myntra: { width: 100, height: 152 },
         snapdeal: { width: 105, height: 148 }
-    };
+    }), []);
 
     useEffect(() => {
         setZoom(1);
         setPan({ x: 0, y: 0 });
     }, [currentPreviewIndex]);
 
-    const MARKET_COPY: Record<LabelCropToolProps['marketplace'], { title: string; note: string; accent: string }> = {
+    const MARKET_COPY = useMemo<Record<LabelCropToolProps['marketplace'], { title: string; note: string; accent: string }>>(() => ({
         flipkart: {
             title: 'Flipkart Label Crop',
             note: 'Optimized 100×148 mm layout with generous padding for barcodes.',
@@ -68,7 +68,7 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
             note: 'A6 sized 105×148 mm layout for standard shipping labels.',
             accent: 'bg-red-50'
         }
-    };
+    }), []);
 
     // Enhanced detection for QR codes and barcodes to identify label area
     const detectBarcodeRegions = (
@@ -689,22 +689,22 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
 
 
     return (
-        <div className="min-h-screen py-10" style={{ background: 'radial-gradient(circle at 12% 20%, var(--accent-soft), transparent 32%), radial-gradient(circle at 82% 12%, rgba(99,102,241,0.12), transparent 36%), var(--surface-muted)' }}>
+        <div className="min-h-screen py-6 sm:py-8 lg:py-10" style={{ background: 'radial-gradient(circle at 12% 20%, var(--accent-soft), transparent 32%), radial-gradient(circle at 82% 12%, rgba(99,102,241,0.12), transparent 36%), var(--surface-muted)' }}>
             <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="glass-card rounded-2xl p-6 md:p-8 grid md:grid-cols-2 gap-8">
-                    <div className="space-y-4">
-                        <div className="flex items-center gap-3">
-                            <span className="px-3 py-1 rounded-full text-xs font-semibold accent-pill uppercase tracking-wide">
+                <div className="glass-card rounded-2xl p-4 sm:p-6 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                    <div className="space-y-3 sm:space-y-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+                            <span className="px-2 sm:px-3 py-1 rounded-full text-xs font-semibold accent-pill uppercase tracking-wide w-fit">
                                 {MARKET_COPY[marketplace].title}
                             </span>
                             <span className="text-xs" style={{ color: 'var(--text-muted)' }}>
                                 PDF only • Auto-crop • Exports match marketplace size
                             </span>
                         </div>
-                        <h2 className="text-2xl font-bold" style={{ color: 'var(--text)' }}>
+                        <h2 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--text)' }}>
                             Upload & Crop
                         </h2>
-                        <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                        <p className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>
                             {MARKET_COPY[marketplace].note}
                         </p>
                         {processing && processingProgress.total > 0 && (
@@ -742,21 +742,21 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
                             onDrop={handleDrop}
                             onDragOver={handleDragOver}
                             onDragLeave={handleDragLeave}
-                            className={`tilt glass-card tilt-inner border-dashed border-2 rounded-xl p-6 flex items-center justify-center cursor-pointer transition-all ${
+                            className={`tilt glass-card tilt-inner border-dashed border-2 rounded-xl p-4 sm:p-6 flex items-center justify-center cursor-pointer transition-all ${
                                 isDragOver ? 'border-[var(--accent)] bg-[var(--accent-soft)]' : 'border-[var(--border)]'
                             }`}
                             style={{ background: isDragOver ? 'var(--accent-soft)' : 'var(--surface-muted)' }}
                         >
                             <label htmlFor="upload" className="w-full cursor-pointer">
-                                <div className="flex items-center gap-3" style={{ color: 'var(--text)' }}>
-                                    <Upload className="w-5 h-5" />
-                                    <div className="text-left flex-1">
-                                        <div className="font-semibold">
+                                <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 text-center sm:text-left" style={{ color: 'var(--text)' }}>
+                                    <Upload className="w-5 h-5 flex-shrink-0" />
+                                    <div className="flex-1 w-full">
+                                        <div className="font-semibold text-sm sm:text-base">
                                             {files.length > 0 
                                                 ? `${files.length} file(s) selected` 
                                                 : 'Drop PDFs here or click to browse'}
                                         </div>
-                                        <div className="text-xs" style={{ color: 'var(--text-muted)' }}>
+                                        <div className="text-xs mt-1" style={{ color: 'var(--text-muted)' }}>
                                             Upload multiple PDFs at once • Batch processing • Page 1 only
                                         </div>
                                     </div>
@@ -765,14 +765,14 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
                         </div>
 
                         {files.length > 0 && (
-                            <div className="space-y-2 max-h-48 overflow-y-auto">
+                            <div className="space-y-2 max-h-48 sm:max-h-64 overflow-y-auto">
                                 <div className="text-xs font-semibold" style={{ color: 'var(--text-muted)' }}>
                                     Files ({files.length}):
                                 </div>
                                 {files.map((f, idx) => (
                                     <div
                                         key={idx}
-                                        className={`glass-card p-3 rounded-lg flex items-center justify-between gap-2 cursor-pointer transition-all ${
+                                        className={`glass-card p-2 sm:p-3 rounded-lg flex items-center justify-between gap-2 cursor-pointer transition-all ${
                                             currentPreviewIndex === idx ? 'ring-2 ring-[var(--accent)]' : ''
                                         }`}
                                         onClick={() => {
@@ -783,35 +783,37 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
                                     >
                                         <div className="flex items-center gap-2 flex-1 min-w-0">
                                             <FileText className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--accent)' }} />
-                                            <span className="text-sm truncate" style={{ color: 'var(--text)' }}>
+                                            <span className="text-xs sm:text-sm truncate" style={{ color: 'var(--text)' }}>
                                                 {f.name}
                                             </span>
                                             {idx < processedFiles.length && processedFiles[idx].processed && (
-                                                <span className="text-xs px-2 py-0.5 rounded-full accent-pill">Ready</span>
+                                                <span className="text-xs px-1.5 sm:px-2 py-0.5 rounded-full accent-pill whitespace-nowrap">Ready</span>
                                             )}
                                         </div>
-                                        {idx < processedFiles.length && (
+                                        <div className="flex items-center gap-1">
+                                            {idx < processedFiles.length && (
+                                                <button
+                                                    onClick={(e => {
+                                                        e.stopPropagation();
+                                                        handleExportPdf(idx);
+                                                    })}
+                                                    className="p-1.5 sm:p-1 hover:bg-[var(--accent-soft)] rounded transition-colors"
+                                                    title="Export this file"
+                                                >
+                                                    <Download className="w-4 h-4" style={{ color: 'var(--accent)' }} />
+                                                </button>
+                                            )}
                                             <button
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    handleExportPdf(idx);
+                                                    removeFile(idx);
                                                 }}
-                                                className="p-1 hover:bg-[var(--accent-soft)] rounded transition-colors"
-                                                title="Export this file"
+                                                className="p-1.5 sm:p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-colors"
+                                                title="Remove file"
                                             >
-                                                <Download className="w-4 h-4" style={{ color: 'var(--accent)' }} />
+                                                <X className="w-4 h-4 text-red-500" />
                                             </button>
-                                        )}
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                removeFile(idx);
-                                            }}
-                                            className="p-1 hover:bg-red-100 dark:hover:bg-red-900/20 rounded transition-colors"
-                                            title="Remove file"
-                                        >
-                                            <X className="w-4 h-4 text-red-500" />
-                                        </button>
+                                        </div>
                                     </div>
                                 ))}
                             </div>
@@ -826,12 +828,12 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
                             <button
                                 onClick={() => handleExportPdf()}
                                 disabled={processing || processedFiles.length === 0}
-                                className="flex-1 accent-btn py-3 rounded-xl disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="flex-1 accent-btn py-2.5 sm:py-3 rounded-xl disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm sm:text-base"
                             >
                                 {processing ? (
-                                    <RotateCw className="animate-spin w-5 h-5" />
+                                    <RotateCw className="animate-spin w-4 h-4 sm:w-5 sm:h-5" />
                                 ) : (
-                                    <Download className="w-5 h-5" />
+                                    <Download className="w-4 h-4 sm:w-5 sm:h-5" />
                                 )}
                                 <span className="font-semibold">
                                     {processedFiles.length > 1 ? `Export All (${processedFiles.length})` : 'Export PDF'}
@@ -841,35 +843,35 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
                     </div>
 
                     <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                            <h3 className="text-xl font-bold" style={{ color: 'var(--text)' }}>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0">
+                            <h3 className="text-lg sm:text-xl font-bold" style={{ color: 'var(--text)' }}>
                                 Preview
                                 {processedFiles.length > 1 && (
-                                    <span className="text-sm font-normal ml-2" style={{ color: 'var(--text-muted)' }}>
+                                    <span className="text-xs sm:text-sm font-normal ml-2" style={{ color: 'var(--text-muted)' }}>
                                         ({currentPreviewIndex + 1}/{processedFiles.length})
                                     </span>
                                 )}
                             </h3>
-                            <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-2 flex-wrap">
                                 {processedFiles.length > 1 && (
                                     <>
                                         <button
                                             onClick={() => setCurrentPreviewIndex(prev => Math.max(0, prev - 1))}
                                             disabled={currentPreviewIndex === 0}
-                                            className="px-2 py-1 rounded accent-outline text-xs disabled:opacity-50"
+                                            className="px-2 sm:px-3 py-1.5 sm:py-1 rounded accent-outline text-xs disabled:opacity-50 min-h-[44px] min-w-[44px]"
                                         >
                                             ←
                                         </button>
                                         <button
                                             onClick={() => setCurrentPreviewIndex(prev => Math.min(processedFiles.length - 1, prev + 1))}
                                             disabled={currentPreviewIndex === processedFiles.length - 1}
-                                            className="px-2 py-1 rounded accent-outline text-xs disabled:opacity-50"
+                                            className="px-2 sm:px-3 py-1.5 sm:py-1 rounded accent-outline text-xs disabled:opacity-50 min-h-[44px] min-w-[44px]"
                                         >
                                             →
                                         </button>
                                     </>
                                 )}
-                                <span className="text-xs px-3 py-1 rounded-full accent-pill">
+                                <span className="text-xs px-2 sm:px-3 py-1 rounded-full accent-pill">
                                     {MARKET_COPY[marketplace].title.replace(' Label Crop', '')}
                                 </span>
                             </div>
@@ -879,12 +881,36 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
                             style={{ borderColor: 'var(--border)', background: 'var(--surface-muted)' }}
                         >
                             <div 
-                                className="p-4 min-h-[400px] flex items-center justify-center overflow-hidden relative"
+                                className="p-2 sm:p-4 min-h-[300px] sm:min-h-[400px] lg:min-h-[500px] flex items-center justify-center overflow-hidden relative"
                                 onMouseDown={handleMouseDown}
                                 onMouseMove={handleMouseMove}
                                 onMouseUp={handleMouseUp}
                                 onMouseLeave={handleMouseUp}
                                 onWheel={handleWheel}
+                                onTouchStart={(e) => {
+                                    if (e.touches.length === 1 && zoom > 1) {
+                                        e.preventDefault();
+                                        const touch = e.touches[0];
+                                        setIsDragging(true);
+                                        setDragStart({ x: touch.clientX - pan.x, y: touch.clientY - pan.y });
+                                    }
+                                }}
+                                onTouchMove={(e) => {
+                                    if (isDragging && e.touches.length === 1 && zoom > 1) {
+                                        e.preventDefault();
+                                        const touch = e.touches[0];
+                                        setPan({
+                                            x: touch.clientX - dragStart.x,
+                                            y: touch.clientY - dragStart.y
+                                        });
+                                    }
+                                }}
+                                onTouchEnd={(e) => {
+                                    if (isDragging) {
+                                        e.preventDefault();
+                                        setIsDragging(false);
+                                    }
+                                }}
                                 style={{ cursor: isDragging ? 'grabbing' : zoom > 1 ? 'grab' : 'default' }}
                             >
                                 {processing && processedFiles.length === 0 ? (
@@ -923,22 +949,22 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
                                 )}
                             </div>
                             {processedFiles.length > 0 && currentPreviewIndex < processedFiles.length && (
-                                <div className="absolute bottom-4 right-4 flex items-center gap-2 glass-card p-2 rounded-lg">
+                                <div className="absolute bottom-2 right-2 sm:bottom-4 sm:right-4 flex items-center gap-1 sm:gap-2 glass-card p-1.5 sm:p-2 rounded-lg">
                                     <button
                                         onClick={handleZoomOut}
                                         disabled={zoom <= 0.5}
-                                        className="p-1.5 rounded hover:bg-[var(--accent-soft)] disabled:opacity-50 transition-colors"
+                                        className="p-1.5 sm:p-2 rounded hover:bg-[var(--accent-soft)] disabled:opacity-50 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                                         title="Zoom out"
                                     >
                                         <ZoomOut className="w-4 h-4" style={{ color: 'var(--accent)' }} />
                                     </button>
-                                    <span className="text-xs px-2" style={{ color: 'var(--text)' }}>
+                                    <span className="text-xs px-1.5 sm:px-2 hidden sm:inline" style={{ color: 'var(--text)' }}>
                                         {Math.round(zoom * 100)}%
                                     </span>
                                     <button
                                         onClick={handleZoomIn}
                                         disabled={zoom >= 3}
-                                        className="p-1.5 rounded hover:bg-[var(--accent-soft)] disabled:opacity-50 transition-colors"
+                                        className="p-1.5 sm:p-2 rounded hover:bg-[var(--accent-soft)] disabled:opacity-50 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
                                         title="Zoom in"
                                     >
                                         <ZoomIn className="w-4 h-4" style={{ color: 'var(--accent)' }} />
@@ -946,7 +972,7 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
                                     {zoom !== 1 && (
                                         <button
                                             onClick={handleZoomReset}
-                                            className="p-1.5 rounded hover:bg-[var(--accent-soft)] transition-colors ml-1"
+                                            className="p-1.5 sm:p-2 rounded hover:bg-[var(--accent-soft)] transition-colors ml-1 min-h-[44px] min-w-[44px] flex items-center justify-center"
                                             title="Reset zoom"
                                         >
                                             <Maximize2 className="w-4 h-4" style={{ color: 'var(--accent)' }} />
@@ -956,12 +982,12 @@ export function LabelCropTool({ marketplace }: Readonly<LabelCropToolProps>) {
                             )}
                         </div>
                         <div className="space-y-1">
-                            <div className="flex items-center justify-between text-xs">
+                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0 text-xs">
                                 <p className="font-semibold" style={{ color: 'var(--text)' }}>
                                     ✓ Preview - This is exactly what will be exported
                                 </p>
                                 {zoom > 1 && (
-                                    <p className="text-[var(--accent)]">
+                                    <p className="text-[var(--accent)] hidden sm:inline">
                                         Drag to pan • Scroll to zoom
                                     </p>
                                 )}

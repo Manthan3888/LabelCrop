@@ -9,5 +9,14 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'pdf-lib': ['pdf-lib'],
+          'pdfjs': ['pdfjs-dist'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000,
   },
 });

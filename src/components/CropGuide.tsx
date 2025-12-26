@@ -25,35 +25,35 @@ export function CropGuide() {
     ];
 
     return (
-        <div className="min-h-screen py-12" style={{ background: 'var(--surface-muted)', color: 'var(--text)' }}>
+        <div className="min-h-screen py-6 sm:py-8 lg:py-12" style={{ background: 'var(--surface-muted)', color: 'var(--text)' }}>
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="glass-card rounded-2xl p-8 mb-8">
-                    <h1 className="text-3xl font-bold mb-2">Crop Guide</h1>
-                    <p className="text-sm" style={{ color: 'var(--text-muted)' }}>
+                <div className="glass-card rounded-2xl p-4 sm:p-6 lg:p-8 mb-6 sm:mb-8">
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-2">Crop Guide</h1>
+                    <p className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>
                         Use this checklist to get clean labels for Flipkart, Meesho, and Amazon.
                     </p>
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-6 mb-10">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-10">
                     {steps.map((step) => (
-                        <div key={step.title} className="glass-card rounded-2xl p-6 flex gap-4">
-                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center" style={{ background: 'var(--accent-soft)', color: 'var(--accent-strong)' }}>
+                        <div key={step.title} className="glass-card rounded-2xl p-4 sm:p-6 flex flex-col sm:flex-row gap-3 sm:gap-4">
+                            <div className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style={{ background: 'var(--accent-soft)', color: 'var(--accent-strong)' }}>
                                 <step.icon className="w-6 h-6" />
                             </div>
                             <div>
-                                <h3 className="font-semibold text-lg" style={{ color: 'var(--text)' }}>{step.title}</h3>
-                                <p className="text-sm" style={{ color: 'var(--text-muted)' }}>{step.detail}</p>
+                                <h3 className="font-semibold text-base sm:text-lg" style={{ color: 'var(--text)' }}>{step.title}</h3>
+                                <p className="text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>{step.detail}</p>
                             </div>
                         </div>
                     ))}
                 </div>
 
-                <div className="glass-card rounded-2xl p-6 flex flex-col gap-3">
-                    <div className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
-                        <CheckCircle2 className="w-4 h-4" />
+                <div className="glass-card rounded-2xl p-4 sm:p-6 flex flex-col gap-3">
+                    <div className="flex items-center gap-2 text-xs sm:text-sm" style={{ color: 'var(--text-muted)' }}>
+                        <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
                         Tips for best results
                     </div>
-                    <ul className="list-disc list-inside space-y-1 text-sm" style={{ color: 'var(--text)' }}>
+                    <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm" style={{ color: 'var(--text)' }}>
                         <li>Upload the original PDF from the marketplace; avoid screenshots.</li>
                         <li>Ensure the label has clear contrast; avoid low-contrast scans.</li>
                         <li>We auto-crop only page 1. If you have multiple labels, use PDF Merge.</li>
@@ -62,7 +62,7 @@ export function CropGuide() {
                     </ul>
                 </div>
 
-                <div className="glass-card rounded-2xl p-6 mt-8 grid md:grid-cols-3 gap-4 text-sm" style={{ color: 'var(--text)' }}>
+                <div className="glass-card rounded-2xl p-4 sm:p-6 mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-xs sm:text-sm" style={{ color: 'var(--text)' }}>
                     <div>
                         <h4 className="font-semibold mb-2">Sizes</h4>
                         <ul className="space-y-1" style={{ color: 'var(--text-muted)' }}>

@@ -1,10 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, lazy, Suspense } from 'react';
 import { Header } from './components/Header';
-import { Home } from './components/Home';
-import { LabelCropTool } from './components/LabelCropTool';
-import { PDFMerge } from './components/PDFMerge';
-import { CropGuide } from './components/CropGuide';
 import { Footer } from './components/Footer';
+
+// Lazy load components for better performance
+const Home = lazy(() => import('./components/Home').then(m => ({ default: m.Home })));
+const LabelCropTool = lazy(() => import('./components/LabelCropTool').then(m => ({ default: m.LabelCropTool })));
+const PDFMerge = lazy(() => import('./components/PDFMerge').then(m => ({ default: m.PDFMerge })));
+const CropGuide = lazy(() => import('./components/CropGuide').then(m => ({ default: m.CropGuide })));
 
 function App() {
     const initialPath = globalThis.location ? globalThis.location.pathname : '/';
@@ -46,25 +48,70 @@ function App() {
     );
 
     const renderPage = () => {
+        const LoadingFallback = () => (
+            <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--surface-muted)' }}>
+                <div className="text-center">
+                    <div className="w-8 h-8 border-4 border-[var(--accent)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p style={{ color: 'var(--text-muted)' }}>Loading...</p>
+                </div>
+            </div>
+        );
+
         switch (currentPath) {
             case '/':
-                return <Home />;
+                return (
+                    <Suspense fallback={<LoadingFallback />}>
+                        <Home />
+                    </Suspense>
+                );
             case '/flipkart':
-                return <LabelCropTool marketplace="flipkart" />;
+                return (
+                    <Suspense fallback={<LoadingFallback />}>
+                        <LabelCropTool marketplace="flipkart" />
+                    </Suspense>
+                );
             case '/meesho':
-                return <LabelCropTool marketplace="meesho" />;
+                return (
+                    <Suspense fallback={<LoadingFallback />}>
+                        <LabelCropTool marketplace="meesho" />
+                    </Suspense>
+                );
             case '/amazon':
-                return <LabelCropTool marketplace="amazon" />;
+                return (
+                    <Suspense fallback={<LoadingFallback />}>
+                        <LabelCropTool marketplace="amazon" />
+                    </Suspense>
+                );
             case '/myntra':
-                return <LabelCropTool marketplace="myntra" />;
+                return (
+                    <Suspense fallback={<LoadingFallback />}>
+                        <LabelCropTool marketplace="myntra" />
+                    </Suspense>
+                );
             case '/snapdeal':
-                return <LabelCropTool marketplace="snapdeal" />;
+                return (
+                    <Suspense fallback={<LoadingFallback />}>
+                        <LabelCropTool marketplace="snapdeal" />
+                    </Suspense>
+                );
             case '/merge':
-                return <PDFMerge />;
+                return (
+                    <Suspense fallback={<LoadingFallback />}>
+                        <PDFMerge />
+                    </Suspense>
+                );
             case '/guide':
-                return <CropGuide />;
+                return (
+                    <Suspense fallback={<LoadingFallback />}>
+                        <CropGuide />
+                    </Suspense>
+                );
             default:
-                return <Home />;
+                return (
+                    <Suspense fallback={<LoadingFallback />}>
+                        <Home />
+                    </Suspense>
+                );
         }
     };
 

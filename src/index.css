@@ -24,9 +24,22 @@
   --border: #1f2937;
 }
 
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 body {
   background: var(--surface-muted);
   color: var(--text);
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
 }
 
 .theme-shell {
@@ -78,4 +91,69 @@ body {
 .accent-outline {
   border: 1px solid var(--accent);
   color: var(--accent-strong);
+}
+
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .glass-card {
+    transform: none !important;
+  }
+  
+  .glass-card:hover {
+    transform: none !important;
+  }
+}
+
+/* Touch-friendly buttons on mobile */
+@media (max-width: 768px) {
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Optimize canvas rendering */
+canvas {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  max-width: 100%;
+  height: auto;
+}
+
+/* Prevent layout shift */
+img, canvas {
+  display: block;
+}
+
+/* Smooth scrolling */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Performance optimizations */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Improve font rendering on mobile */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize animations for mobile */
+@media (max-width: 768px) {
+  .glass-card {
+    will-change: transform;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
