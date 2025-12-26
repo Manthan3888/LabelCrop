@@ -26,6 +26,7 @@
 
 * {
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -40,6 +41,8 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .theme-shell {
@@ -132,16 +135,7 @@ img, canvas {
   }
 }
 
-/* Performance optimizations */
-* {
-  -webkit-tap-highlight-color: transparent;
-}
-
-/* Improve font rendering on mobile */
-body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+/* Performance optimizations - merged with selectors above */
 
 /* Optimize animations for mobile */
 @media (max-width: 768px) {

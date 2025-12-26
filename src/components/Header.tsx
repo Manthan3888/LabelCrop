@@ -10,7 +10,7 @@ interface HeaderProps {
     onAccentChange: (value: string) => void;
 }
 
-export function Header({ theme, onToggleTheme, accent, accents, onAccentChange }: Readonly<HeaderProps>) {
+export function Header({ theme, onToggleTheme }: Readonly<HeaderProps>) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
     return (
